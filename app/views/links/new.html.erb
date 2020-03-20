@@ -1,0 +1,16 @@
+<section class="section">
+	<h1 class="title">Shortener Generator</h1>
+	<%= form_with model: @new_link, local: true do |form| %>
+	  
+
+	  <div class="field">
+	    <%= form.label :full_link, class: "label required-field" %>
+	    <%= form.text_field :full_link, autofocus: true, autocomplete: "", class: "input is-info", type: "text", placeholder: "Enter your original url path" %>
+	  </div>
+	 
+
+	  <div class="actions">
+	    <%= form.submit "Give me a short link!", class: "button is-link" %>
+	  </div>
+	<% end %>
+</section>
