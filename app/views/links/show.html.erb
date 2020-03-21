@@ -11,7 +11,11 @@
 						</tr>
 						<tr>
 							<th>Shortened Link</th>
-							<td><%= @link_id.shortened_link %></td>
+							<td><%= show_url_for(@link_id.shortened_link) %></td>
+						</tr>
+						<tr>
+							<th>Click me to redirect!</th>
+							<td><%= link_to "Click me", show_url_for(@link_id.shortened_link), target: "_blank", rel: 'nofollow'%></td>
 						</tr>
 						<tr>
 							<th>ID</th>

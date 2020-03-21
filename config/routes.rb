@@ -5,4 +5,5 @@ Rails.application.routes.draw do
   resources :links, only: [:new, :create, :show]
 
   get 'links/home'
+  get ':shortened_link', to: 'links#shortened_link_redirect'
 end
