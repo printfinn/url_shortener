@@ -4,7 +4,7 @@ class Link < ApplicationRecord
 	after_validation :smart_add_url_protocol
 
 
-	def full_url(shortened_link:)
+	def get_full_url(shortened_link:)
 		self.recover_full_url(shortened_link)		
 	end
 
@@ -38,20 +38,21 @@ class Link < ApplicationRecord
 				generated << NUMBER_TO_CHAR_DICT[m]
 				n = n / 62
 			end
-			return generated
+			return generated.reverse
 		end
 		def find_shortened_link_primary_id(shortened_link)
 			primary_id = 0
 			shortened_link.reverse!
 			shortened_link.each_char.with_index do |char, i|
-				primary_id = CHAR_TO_NUMBER_DICT[char] * (62 ** i)
+				primary_id += CHAR_TO_NUMBER_DICT[char] * (62 ** i)
 			end
+			
 			return primary_id
 		end
 
 		def recover_full_url(shortened_link)
 			link_id = self.find_shortened_link_primary_id(shortened_link)
-			full_url = Link.find_by(id: link_id).full_link
-			return full_url
+			link = Link.find_by(id: link_id)
+			return link.full_link
 		end
 end

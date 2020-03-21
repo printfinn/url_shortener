@@ -20,7 +20,7 @@ class LinksController < ApplicationController
 	def shortened_link_redirect
 		@link = Link.new
 		shortened_link = params[:shortened_link]
-		ss = @link.full_url(shortened_link: shortened_link)
+		ss = @link.get_full_url(shortened_link: shortened_link)
 		puts "ss: #{ss}"
 		redirect_to ss
 	end
