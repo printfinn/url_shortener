@@ -5,7 +5,11 @@ class Link < ApplicationRecord
 
 
   def self.find_link(shortened_link:)
-    recover_link(shortened_link)
+    if shortened_link_is_valid?(shortened_link)
+      return recover_link(shortened_link)
+    else
+      return nil
+    end
   end
 
   private
@@ -55,4 +59,9 @@ class Link < ApplicationRecord
       Link.find_by(id: link_id)
     end
 
+    # Shortened link should not exceed 6 characters, nor includes illegal characters
+    # Otherwise calculating primary id would result into invalid number
+    def self.shortened_link_is_valid?(shortened_link)
+      !!(shortened_link =~ /^[A-Za-z0-9]{1,6}$/)
+    end
 end
