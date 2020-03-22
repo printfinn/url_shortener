@@ -10,11 +10,12 @@ class Link < ApplicationRecord
 
 
   private
-    # Total: 26 + 26 + 10 = 62 chars
+    # Total: 26 + 26 + 10 = DICT_SIZE chars
     CHAR_TO_NUMBER_DICT = [*('a'..'z'), *('A'..'Z'), *('0'..'9')]
                         .each_with_index
                         .to_h
-    NUMBER_TO_CHAR_DICT = CHAR_TO_NUMBER_DICT.invert  
+    NUMBER_TO_CHAR_DICT = CHAR_TO_NUMBER_DICT.invert
+    DICT_SIZE = CHAR_TO_NUMBER_DICT.size
     
     # update database
     def update_link_with_shortened_link
@@ -24,7 +25,7 @@ class Link < ApplicationRecord
 
     # in case user didn't input http:// or https://
     def smart_add_url_protocol
-      unless self.full_link[/\Ahttp:\/\//] || self.full_link[/\Ahttps:\/\//]
+      unless self.full_link and (self.full_link[/\Ahttp:\/\//] || self.full_link[/\Ahttps:\/\//])
         self.full_link = "http://#{self.full_link}"
       end
     end
@@ -34,25 +35,27 @@ class Link < ApplicationRecord
       generated = ""
       n = self.id
       while n != 0
-        m = n % 62
+        m = n % DICT_SIZE
         generated << NUMBER_TO_CHAR_DICT[m]
-        n = n / 62
+        n = n / DICT_SIZE
       end
       return generated.reverse
     end
+
     def find_shortened_link_primary_id(shortened_link)
       primary_id = 0
       shortened_link.reverse!
       shortened_link.each_char.with_index do |char, i|
-        primary_id += CHAR_TO_NUMBER_DICT[char] * (62 ** i)
+        primary_id += CHAR_TO_NUMBER_DICT[char] * (DICT_SIZE ** i)
       end
       
       return primary_id
     end
 
+    # Active Record Not Found Error will be handled by LinksController#shortened_link_redirect
     def recover_full_url(shortened_link)
       link_id = self.find_shortened_link_primary_id(shortened_link)
       link = Link.find_by(id: link_id)
-      return link.full_link
+      return link&.full_link
     end
 end

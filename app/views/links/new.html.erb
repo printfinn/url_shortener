@@ -1,6 +1,6 @@
 <section class="section">
   <h1 class="title">Shortener Generator</h1>
-  <%= form_with model: @new_link, local: true do |form| %>
+  <%= form_with model: @new_link, authenticity_token: false, local: true do |form| %>
     
 
     <div class="field">
