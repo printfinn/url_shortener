@@ -3,26 +3,26 @@ class LinksController < ApplicationController
 
   # GET /links/new
   def new
-    @new_link = Link.new
+    @link = Link.new
   end
 
   # POST /links
   # POST /links.json
   def create
-    @new_link = Link.new(link_params)
+    @link = Link.new(link_params)
 
-    if @new_link.save
+    if @link.save
       respond_to do |format|
-        format.html { redirect_to @new_link }
+        format.html { redirect_to @link }
         format.json {
-          render json: { url: root_url << @new_link.shortened_link },  status: :created
+          render json: { url: root_url << @link.shortened_link },  status: :created
         }
       end
     else
       respond_to do |format|
         format.html { render 'new' }
         format.json {
-          render json: { errors: @new_link.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @link.errors.full_messages }, status: :unprocessable_entity
         }
       end
     end
@@ -37,16 +37,13 @@ class LinksController < ApplicationController
   # GET /xXyYo0
   # GET /xXyYo0.json
   def shortened_link_redirect
-    @link = Link.new
-    shortened_link = params[:shortened_link]
-    recovered_full_link = @link.get_full_url(shortened_link: shortened_link)
-    
+    @link = Link.find_link(shortened_link: params[:shortened_link])
     # Also handles Active Record Not Found Error from Link::recover_full_url
-    unless recovered_full_link.nil?
+    unless @link&.full_link.nil?
       respond_to do |format|
-        format.html { redirect_to recovered_full_link }
+        format.html { redirect_to @link.full_link }
         format.json {
-          render json: { full_link: recovered_full_link }, status: :moved_permanently
+          render json: { full_link: @link.full_link }, status: :moved_permanently
         }
       end
     else

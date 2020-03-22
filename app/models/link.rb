@@ -4,10 +4,9 @@ class Link < ApplicationRecord
   after_validation :smart_add_url_protocol
 
 
-  def get_full_url(shortened_link:)
-    self.recover_full_url(shortened_link)   
+  def self.find_link(shortened_link:)
+    recover_link(shortened_link)
   end
-
 
   private
     # Total: 26 + 26 + 10 = DICT_SIZE chars
@@ -39,23 +38,21 @@ class Link < ApplicationRecord
         generated << NUMBER_TO_CHAR_DICT[m]
         n = n / DICT_SIZE
       end
-      return generated.reverse
+      generated.reverse
     end
 
-    def find_shortened_link_primary_id(shortened_link)
+    def self.find_shortened_link_primary_id(shortened_link)
       primary_id = 0
       shortened_link.reverse!
       shortened_link.each_char.with_index do |char, i|
         primary_id += CHAR_TO_NUMBER_DICT[char] * (DICT_SIZE ** i)
       end
-      
-      return primary_id
+      primary_id
     end
 
-    # Active Record Not Found Error will be handled by LinksController#shortened_link_redirect
-    def recover_full_url(shortened_link)
-      link_id = self.find_shortened_link_primary_id(shortened_link)
-      link = Link.find_by(id: link_id)
-      return link&.full_link
+    def self.recover_link(shortened_link)
+      link_id = find_shortened_link_primary_id(shortened_link)
+      Link.find_by(id: link_id)
     end
+
 end
