@@ -35,25 +35,25 @@ http://www.example.com/api/v1/links \
 -H 'Accept: application/json' \
 -H 'Content-Type: application/json' \
 -d '{
-	"link": {
-		"full_link": "www.example.com"
-	}
+  "link": {
+    "full_link": "www.example.com"
+  }
 }'
 ```
 
 ### Code Structure
 * Controller:
-	* StaticPages Controller 
-	* Links Controller
-	* api/v1/Links Controller
+  * StaticPages Controller 
+  * Links Controller
+  * api/v1/Links Controller
 * Model:
-	* Link Model
+  * Link Model
 * View
-	* Links
-		* New
-		* Show
-	* static_pages
-		* Home
+  * Links
+    * New
+    * Show
+  * static_pages
+    * Home
 
 ### How this works
 This service takes advantage of the increase only primary id of database. For every shortened link generated, it is a map from this database record's primary id to a dictionary.
