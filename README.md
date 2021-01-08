@@ -14,7 +14,7 @@
 ## A url shortener service with Ruby on Rails
 
 ### Online Demo 
-Check this [HerokuApp](https://enigmatic-tor-33138.herokuapp.com)
+Check this [HerokuApp](https://finn-url-shortener.herokuapp.com/)
 
 ### RESTful API Document
 This app supplies not only a web page service, but also a RESTful API which you can use command line tools like cURL to interact with.
